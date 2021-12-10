@@ -1,11 +1,25 @@
 import javax.swing.*;
 import java.awt.*;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
     private final int WIDTH = 750;
     private final int HEIGHT = 550;
+    JTextField textFrom = new JTextField();
+    JTextField textTo = new JTextField();
+    JTextField textStep = new JTextField();
+
+    JButton calculate = new JButton("Вычислить");
+    JButton clear = new JButton("Очистить поля");
+
+    private Box boxResult;
+
     private Double[] _coefficients;
+
+    private GornerTableCellRenderer renderer = new GornerTableCellRenderer();
+
+    private GornerTableModel data;
 
     MainFrame(Double[] coefficients){
         super("Табулирование многочлена на отрезке по схеме \"Горнера\"");
@@ -15,8 +29,57 @@ public class MainFrame extends JFrame {
         _coefficients = coefficients;
 
         setJMenuBar(new MyMenuBar());
+        calculate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Double from = Double.parseDouble(textFrom.getText());
+                    Double to = Double.parseDouble(textTo.getText());
+                    Double step = Double.parseDouble(textStep.getText());
+
+                    data = new GornerTableModel(_coefficients, from, to, step);
+
+                    JTable table = new JTable(data);
+
+                    table.setDefaultRenderer(Double.class, renderer);
+
+                    table.setRowHeight(30);
+
+                    boxResult.removeAll();
+
+                    boxResult.add(new JScrollPane(table));
+
+                    getContentPane().validate();
+                } catch (NumberFormatException ex) {
+                    // В случае ошибки преобразования чисел показать сообщение об ошибке
+                    JOptionPane.showMessageDialog(MainFrame.this,
+                            "Ошибка в формате записи числа с плавающей точкой", "Ошибочный формат числа",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
+        clear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textFrom.setText("0.0");
+                textTo.setText("1.0");
+                textStep.setText("0.1");
+
+                boxResult.removeAll();
+
+                boxResult.add(new JPanel());
+                getContentPane().validate();
+            }
+        });
 
         createBox(this);
+
+        createJButtonBox(this);
+
+        boxResult = Box.createHorizontalBox();
+        boxResult.add(new JPanel());
+        add(boxResult, BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -24,15 +87,15 @@ public class MainFrame extends JFrame {
         Box box = Box.createHorizontalBox();
 
         JLabel from = new JLabel("Х изменяется на интервале от: ");
-        JTextField textFrom = new JTextField("0", 10);
+        textFrom = new JTextField("0", 10);
         textFrom.setMaximumSize(textFrom.getPreferredSize());
 
         JLabel to = new JLabel("до: ");
-        JTextField textTo = new JTextField("0", 10);
+        textTo = new JTextField("1", 10);
         textTo.setMaximumSize(textTo.getPreferredSize());
 
         JLabel step = new JLabel("с шагом: ");
-        JTextField textStep = new JTextField("0", 10);
+        textStep = new JTextField("0.1", 10);
         textStep.setMaximumSize(textStep.getPreferredSize());
 
         box.add(Box.createHorizontalGlue());
@@ -55,5 +118,20 @@ public class MainFrame extends JFrame {
 
         jFrame.add(box, BorderLayout.NORTH);
     }
+    private void createJButtonBox(JFrame jFrame){
+        Box jButtonBox = Box.createHorizontalBox();
+        jButtonBox.add(Box.createHorizontalGlue());
+        jButtonBox.add(calculate);
+        jButtonBox.add(Box.createVerticalStrut(20));
+        jButtonBox.add(clear);
+        jButtonBox.add(Box.createHorizontalGlue());
+
+        jButtonBox.setBorder(BorderFactory.createBevelBorder(1));
+        jButtonBox.setPreferredSize(new Dimension(WIDTH, jButtonBox.getMaximumSize().height * 2));
+
+        jFrame.add(jButtonBox, BorderLayout.SOUTH);
+    }
+
+
 
 }
