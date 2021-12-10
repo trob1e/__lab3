@@ -22,18 +22,26 @@ public class GornerTableCellRenderer implements TableCellRenderer {
         formatter.setDecimalFormatSymbols(dottedDouble);
 
         panel.add(label);
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER));
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table,
+                                                   Object value,
+                                                   boolean isSelected,
+                                                   boolean hasFocus,
+                                                   int row, int column) {
         String formattedDouble = formatter.format(value);
-        label.setText(formattedDouble);
 
-        if (column == 1 && needle != null && needle.equals(formattedDouble)) {
-            panel.setBackground(Color.RED);
-        } else {
+        if ((column%2 == 0 && row%2 == 0) || (column%2 != 0 && row%2 != 0)) {
             panel.setBackground(Color.WHITE);
+            label.setForeground(Color.BLACK);
+            label.setText(formattedDouble);
+        }
+        else {
+            panel.setBackground(Color.BLACK);
+            label.setForeground(Color.WHITE);
+            label.setText(formattedDouble);
         }
 
         return panel;
