@@ -65,7 +65,7 @@ public class GornerTableModel extends AbstractTableModel {
             return reverseResult;
         }
 
-        else {
+        else{
             return res - revRes;
         }
     }
@@ -85,6 +85,7 @@ public class GornerTableModel extends AbstractTableModel {
                 throw new IllegalStateException("Unexpected value: " + columnIndex);
         }
     }
+
     public Class<?> getColumnClass(int columnIndex) {
         return Double.class;
     }

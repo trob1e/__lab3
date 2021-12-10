@@ -9,7 +9,7 @@ public class GornerTableCellRenderer implements TableCellRenderer {
     private JPanel panel = new JPanel();
     private JLabel label = new JLabel();
 
-    private String needle = null;
+    private String _needle = null;
 
     private DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
 
@@ -26,15 +26,16 @@ public class GornerTableCellRenderer implements TableCellRenderer {
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table,
-                                                   Object value,
-                                                   boolean isSelected,
-                                                   boolean hasFocus,
-                                                   int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         String formattedDouble = formatter.format(value);
 
         if ((column%2 == 0 && row%2 == 0) || (column%2 != 0 && row%2 != 0)) {
             panel.setBackground(Color.WHITE);
+            label.setForeground(Color.BLACK);
+            label.setText(formattedDouble);
+        }
+        else if (_needle != null && column == 1 && _needle.equals(formattedDouble)){
+            panel.setBackground(Color.RED);
             label.setForeground(Color.BLACK);
             label.setText(formattedDouble);
         }
@@ -43,11 +44,10 @@ public class GornerTableCellRenderer implements TableCellRenderer {
             label.setForeground(Color.WHITE);
             label.setText(formattedDouble);
         }
-
         return panel;
     }
 
     public void setNeedle(String needle) {
-        this.needle = needle;
+        _needle = needle;
     }
 }

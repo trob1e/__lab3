@@ -17,9 +17,10 @@ public class MainFrame extends JFrame {
 
     private Double[] _coefficients;
 
-    private GornerTableCellRenderer renderer = new GornerTableCellRenderer();
+    private static GornerTableCellRenderer renderer = new GornerTableCellRenderer();
 
     private GornerTableModel data;
+    private MyMenuBar menuBar = new MyMenuBar(_coefficients,data,false);
 
     MainFrame(Double[] coefficients){
         super("Табулирование многочлена на отрезке по схеме \"Горнера\"");
@@ -28,11 +29,12 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         _coefficients = coefficients;
 
-        setJMenuBar(new MyMenuBar());
+        setJMenuBar(menuBar);
         calculate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    menuBar.setVisible(true);
                     Double from = Double.parseDouble(textFrom.getText());
                     Double to = Double.parseDouble(textTo.getText());
                     Double step = Double.parseDouble(textStep.getText());
@@ -48,7 +50,7 @@ public class MainFrame extends JFrame {
                     boxResult.removeAll();
 
                     boxResult.add(new JScrollPane(table));
-
+                    menuBar.validate(data, _coefficients);
                     getContentPane().validate();
                 } catch (NumberFormatException ex) {
                     // В случае ошибки преобразования чисел показать сообщение об ошибке
@@ -62,13 +64,17 @@ public class MainFrame extends JFrame {
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                menuBar.setVisible(false);
                 textFrom.setText("0.0");
                 textTo.setText("1.0");
                 textStep.setText("0.1");
 
                 boxResult.removeAll();
+                renderer.setNeedle(null);
 
                 boxResult.add(new JPanel());
+
+                menuBar.validate(null,null);
                 getContentPane().validate();
             }
         });
@@ -132,6 +138,6 @@ public class MainFrame extends JFrame {
         jFrame.add(jButtonBox, BorderLayout.SOUTH);
     }
 
-
+    public static GornerTableCellRenderer getRenderer(){return renderer;}
 
 }
