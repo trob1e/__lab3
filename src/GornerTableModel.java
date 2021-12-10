@@ -65,10 +65,28 @@ public class GornerTableModel extends AbstractTableModel {
             return reverseResult;
         }
 
-        else if(columnIndex == 3){
+        else {
             return res - revRes;
         }
-
-        return null;
     }
+
+    @Override
+    public String getColumnName(int columnIndex){
+        switch (columnIndex){
+            case 0:
+                return "Значение Х";
+            case 1:
+                return "Значение многочлена";
+            case 2:
+                return "Значение обратного многочлена";
+            case 3:
+                return "Разность";
+            default:
+                throw new IllegalStateException("Unexpected value: " + columnIndex);
+        }
+    }
+    public Class<?> getColumnClass(int columnIndex) {
+        return Double.class;
+    }
+
 }

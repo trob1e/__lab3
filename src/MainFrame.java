@@ -7,12 +7,12 @@ public class MainFrame extends JFrame {
     private final int HEIGHT = 550;
     private Double[] _coefficients;
 
-    MainFrame(){
-        super("Табулирование многочлена на отрезке по схеме Горнера");
+    MainFrame(Double[] coefficients){
+        super("Табулирование многочлена на отрезке по схеме \"Горнера\"");
         setSize(WIDTH,HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //_coefficients = coefficients;
+        _coefficients = coefficients;
 
         setJMenuBar(new MyMenuBar());
 
